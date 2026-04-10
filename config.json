@@ -1,0 +1,15 @@
+{
+  "inbounds": [{
+    "port": 8080,
+    "protocol": "trojan",
+    "settings": {
+      "clients": [{"password": "zaki-neymar-2026"}],
+      "fallback": {"dest": 80}
+    },
+    "streamSettings": {
+      "network": "ws",
+      "wsSettings": {"path": "/Zaki-Neymar-L-RealMadrid"}
+    }
+  }],
+  "outbounds": [{"protocol": "freedom"}]
+}
