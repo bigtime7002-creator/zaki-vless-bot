@@ -1,16 +1,11 @@
-name: Zaki Final Boss
-on:
-  workflow_dispatch:
-    inputs:
-      project_id:
-        description: 'Project ID'
-        required: true
+name: Zaki_Final_Boss
+on: workflow_dispatch
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: 'Execution'
+      - name: 'Execute'
         run: |
           gcloud auth activate-refresh-token "1//04iwQ7-zxAN9vCgYIARAAGAQSNwF-L9Ir7BMQ8p1hrb2pU8dn_pdnienoZ_8qPEpfQfVCyNW0vNvoiNfH0aLRPQJUfzF6dZWTQko" --client-id="407408718192.apps.googleusercontent.com" --client-secret="d9Q0vAL2A6pSp6qE8sPSBv9p"
-          gcloud run deploy zaki-server --source . --project="${{ github.event.inputs.project_id }}" --region="europe-west1" --allow-unauthenticated --port=8080 --quiet
+          gcloud run deploy zaki-server --source . --region=europe-west1 --allow-unauthenticated --port=8080 --quiet
