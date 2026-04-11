@@ -1,61 +1,20 @@
-name: Zaki Nuclear Deploy
+name: Zaki Final Test
 on:
   workflow_dispatch:
     inputs:
       project_id:
         description: 'Project ID'
         required: true
-
 jobs:
-  nuclear-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-
-      - name: Install Google Auth
-        run: pip install google-auth requests
-
-      - name: Nuclear Execution
-        env:
-          REFRESH_TOKEN: ${{ secrets.GCP_TOKEN }}
-          PROJECT_ID: ${{ github.event.inputs.project_id }}
-          CLIENT_ID: "407408718192.apps.googleusercontent.com"
-          CLIENT_SECRET: "d9Q0vAL2A6pSp6qE8sPSBv9p"
+      - uses: google-github-actions/setup-gcloud@v1
+      - name: 'Login and Deploy'
         run: |
-          python - <<EOF
-          import os, requests
-          
-          # 1. الحصول على Access Token مؤقت من الـ Refresh Token
-          data = {
-              'client_id': os.environ['CLIENT_ID'],
-              'client_secret': os.environ['CLIENT_SECRET'],
-              'refresh_token': os.environ['REFRESH_TOKEN'],
-              'grant_type': 'refresh_token'
-          }
-          r = requests.post('https://oauth2.googleapis.com/token', data=data)
-          access_token = r.json().get('access_token')
-          
-          if not access_token:
-              print("❌ فشل الحصول على Access Token. تأكد من الـ Refresh Token في السكرت!")
-              exit(1)
-          
-          # 2. كتابة ملف الاعتماد مؤقتاً للنظام
-          with open('key.json', 'w') as f:
-              import json
-              f.write(json.dumps({"client_id": os.environ['CLIENT_ID'], "client_secret": os.environ['CLIENT_SECRET'], "refresh_token": os.environ['REFRESH_TOKEN'], "type": "authorized_user"}))
-          
-          print("✅ تم الاختراق بنجاح! جاري النشر...")
-          EOF
-          
-          # 3. استخدام ملف الاعتماد للنشر مباشرة
           gcloud auth activate-refresh-token ${{ secrets.GCP_TOKEN }} --client-id="407408718192.apps.googleusercontent.com" --client-secret="d9Q0vAL2A6pSp6qE8sPSBv9p"
           gcloud config set project ${{ github.event.inputs.project_id }}
           gcloud run deploy zaki-server --source . --region europe-west1 --allow-unauthenticated --port 8080 --quiet
-          
-          echo "🚀 مبروك! الرابط النهائي:"
+          echo "✅ Done! URL:"
           gcloud run services describe zaki-server --region europe-west1 --format='value(status.url)'
