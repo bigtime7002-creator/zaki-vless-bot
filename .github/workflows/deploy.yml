@@ -12,26 +12,23 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v1'
-        with:
-          # هذا السطر سيربط المفتاح الذي وضعته في الإعدادات
-          token_format: 'access_token'
-          refresh_token: ${{ secrets.GCP_TOKEN }}
-          client_id: ${{ vars.GCP_CLIENT_ID || '407408718192.apps.googleusercontent.com' }}
-          client_secret: ${{ vars.GCP_CLIENT_SECRET || 'd9Q0vAL2A6pSp6qE8sPSBv9p' }}
-
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
 
-      - name: 'Deploy to Cloud Run'
+      - name: 'Direct Authentication & Deploy'
         run: |
+          # هذه هي الطريقة المختصرة والقوية
+          gcloud auth activate-refresh-token ${{ secrets.GCP_TOKEN }} --client-id="407408718192.apps.googleusercontent.com" --client-secret="d9Q0vAL2A6pSp6qE8sPSBv9p"
+          
+          # ضبط المشروع
           gcloud config set project ${{ github.event.inputs.project_id }}
+          
+          # النشر
           gcloud run deploy zaki-server \
             --source . \
             --region europe-west1 \
             --allow-unauthenticated \
             --port 8080 --quiet
           
-          echo "الرابط النهائي للسيرفر هو:"
+          echo "تم بنجاح! الرابط هو:"
           gcloud run services describe zaki-server --region europe-west1 --format='value(status.url)'
