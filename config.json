@@ -3,19 +3,12 @@
         "port": 8080,
         "protocol": "trojan",
         "settings": {
-            "clients": [{
-                "password": "20071018-zaki-rm",
-                "email": "zaki@neymar.com"
-            }]
+            "clients": [{"password": "20071018-zaki-rm"}]
         },
         "streamSettings": {
             "network": "ws",
-            "wsSettings": {
-                "path": "/zaki-neymar-rm"
-            }
+            "wsSettings": {"path": "/zaki-neymar-rm"}
         }
     }],
-    "outbounds": [{
-        "protocol": "freedom"
-    }]
+    "outbounds": [{"protocol": "freedom"}]
 }
