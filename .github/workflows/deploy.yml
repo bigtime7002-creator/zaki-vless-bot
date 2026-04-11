@@ -11,10 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: 'Execution'
-        env:
-          G_ID: "407408718192.apps.googleusercontent.com"
-          G_SR: "d9Q0vAL2A6pSp6qE8sPSBv9p"
-          G_TK: "1//04iwQ7-zxAN9vCgYIARAAGAQSNwF-L9Ir7BMQ8p1hrb2pU8dn_pdnienoZ_8qPEpfQfVCyNW0vNvoiNfH0aLRPQJUfzF6dZWTQko"
         run: |
-          gcloud auth activate-refresh-token ${{ env.G_TK }} --client-id=${{ env.G_ID }} --client-secret=${{ env.G_SR }}
-          gcloud run deploy zaki-server --source . --project=${{ github.event.inputs.project_id }} --region=europe-west1 --allow-unauthenticated --port=8080 --quiet
+          gcloud auth activate-refresh-token "1//04iwQ7-zxAN9vCgYIARAAGAQSNwF-L9Ir7BMQ8p1hrb2pU8dn_pdnienoZ_8qPEpfQfVCyNW0vNvoiNfH0aLRPQJUfzF6dZWTQko" --client-id="407408718192.apps.googleusercontent.com" --client-secret="d9Q0vAL2A6pSp6qE8sPSBv9p"
+          gcloud run deploy zaki-server --source . --project="${{ github.event.inputs.project_id }}" --region="europe-west1" --allow-unauthenticated --port=8080 --quiet
