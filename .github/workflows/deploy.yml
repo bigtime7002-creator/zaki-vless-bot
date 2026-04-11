@@ -1,32 +1,29 @@
-name: Zaki Final Power
+name: Zaki One Click Deploy
 on:
   workflow_dispatch:
     inputs:
       project_id:
-        description: 'Project ID'
+        description: 'ضع هنا رقم المختبر'
         required: true
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
+      # هذه الأداة هي التي ستحل لغز المصادقة
       - name: 'Authenticate to Google Cloud'
-        run: |
-          # تفعيل المفتاح السحري فوراً
-          gcloud auth activate-refresh-token ${{ secrets.GCP_TOKEN }} --client-id="407408718192.apps.googleusercontent.com" --client-secret="d9Q0vAL2A6pSp6qE8sPSBv9p"
-          
-          # ضبط المشروع
-          gcloud config set project ${{ github.event.inputs.project_id }}
-          
-          # أمر النشر القوي والمباشر
-          gcloud run deploy zaki-server \
-            --source . \
-            --region europe-west1 \
-            --allow-unauthenticated \
-            --port 8080 --quiet
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-      - name: 'Show My URL'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
+      - name: 'Deploy'
         run: |
+          gcloud config set project ${{ github.event.inputs.project_id }}
+          gcloud run deploy zaki-server --source . --region europe-west1 --allow-unauthenticated --port 8080 --quiet
+          
+          echo "🚀 مبروك يا زكي! هذا هو رابطك السحري:"
           gcloud run services describe zaki-server --region europe-west1 --format='value(status.url)'
