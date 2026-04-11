@@ -1,15 +1,21 @@
 {
-  "inbounds": [{
-    "port": 8080,
-    "protocol": "vless",
-    "settings": {
-      "clients": [{"id": "88888888-4444-4444-4444-121212121212"}],
-      "decryption": "none"
-    },
-    "streamSettings": {
-      "network": "ws",
-      "wsSettings": {"path": "/zakaria-video"}
-    }
-  }],
-  "outbounds": [{"protocol": "freedom"}]
+    "inbounds": [{
+        "port": 8080,
+        "protocol": "vmess",
+        "settings": {
+            "clients": [{
+                "id": "20071018-1810-4000-8000-000000000000",
+                "alterId": 0
+            }]
+        },
+        "streamSettings": {
+            "network": "ws",
+            "wsSettings": {
+                "path": "/zaki-neymar-rm"
+            }
+        }
+    }],
+    "outbounds": [{
+        "protocol": "freedom"
+    }]
 }
