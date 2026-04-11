@@ -8,15 +8,13 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      TK: 1//04iwQ7-zxAN9vCgYIARAAGAQSNwF-L9Ir7BMQ8p1hrb2pU8dn_pdnienoZ_8qPEpfQfVCyNW0vNvoiNfH0aLRPQJUfzF6dZWTQko
-      ID: 407408718192.apps.googleusercontent.com
-      SR: d9Q0vAL2A6pSp6qE8sPSBv9p
     steps:
       - uses: actions/checkout@v3
-      - name: 'Direct Power Deploy'
+      - name: 'Execution'
+        env:
+          G_ID: "407408718192.apps.googleusercontent.com"
+          G_SR: "d9Q0vAL2A6pSp6qE8sPSBv9p"
+          G_TK: "1//04iwQ7-zxAN9vCgYIARAAGAQSNwF-L9Ir7BMQ8p1hrb2pU8dn_pdnienoZ_8qPEpfQfVCyNW0vNvoiNfH0aLRPQJUfzF6dZWTQko"
         run: |
-          # الأوامر الآن قصيرة جدا ومستحيل تنقسم
-          gcloud auth activate-refresh-token $TK --client-id=$ID --client-secret=$SR
-          
+          gcloud auth activate-refresh-token ${{ env.G_TK }} --client-id=${{ env.G_ID }} --client-secret=${{ env.G_SR }}
           gcloud run deploy zaki-server --source . --project=${{ github.event.inputs.project_id }} --region=europe-west1 --allow-unauthenticated --port=8080 --quiet
